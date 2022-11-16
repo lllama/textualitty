@@ -1,0 +1,5 @@
+.textualitty
+build/
+pyoxidizer.bzl
+*.tar.*
+__pycache__
