@@ -1,14 +1,14 @@
 [tool.poetry]
 name = "textualitty"
-version = "0.1.0.post1"
+version = "0.1.0.post2"
 description = ""
 authors = ["Felix Ingram <f.ingram@gmail.com>"]
 readme = "README.md"
 packages = [{include = "textualitty", from = "src"}]
 
 [project.urls]
-homepage = "https://github.com/lllama/textualitty"
-respository = "https://github.com/lllama/textualitty"
+home = "https://github.com/lllama/textualitty"
+respo = "https://github.com/lllama/textualitty"
 
 [tool.poetry.dependencies]
 python = "^3.10"
