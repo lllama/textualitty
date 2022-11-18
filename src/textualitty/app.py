@@ -90,7 +90,7 @@ def build(verbose):
                 WORKDIR / "build" / "Textualitty.app" / "Contents" / "MacOS" / folder,
             )
         shutil.copy(
-            "textual.icns",
+            Path(__file__).parent.parent / "textual.icns",
             WORKDIR
             / "build"
             / "Textualitty.app"

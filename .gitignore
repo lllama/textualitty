@@ -3,3 +3,6 @@ build/
 pyoxidizer.bzl
 *.tar.*
 __pycache__
+.DS_Store
+*.zip
+*.whl

@@ -1,10 +1,11 @@
 [tool.poetry]
 name = "textualitty"
-version = "0.2.2"
+version = "0.2.3"
 description = ""
 authors = ["Felix Ingram <f.ingram@gmail.com>"]
 readme = "README.md"
 packages = [{include = "textualitty", from = "src"}]
+include = ["textual.icns"]
 
 [project.urls]
 home = "https://github.com/lllama/textualitty"
