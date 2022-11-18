@@ -11,6 +11,7 @@ click = ">=8.0.0"
 mypy-extensions = ">=0.4.3"
 pathspec = ">=0.9.0"
 platformdirs = ">=2"
+tomli = {version = ">=1.1.0", markers = "python_full_version < \"3.11.0a7\""}
 
 [package.extras]
 colorama = ["colorama (>=0.4.3)"]
@@ -88,14 +89,6 @@ python-versions = ">=3.6"
 plugins = ["importlib-metadata"]
 
 [[package]]
-name = "pyoxidizer"
-version = "0.23.0"
-description = "Package self-contained Python applications"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "rich"
 version = "12.6.0"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
@@ -110,10 +103,18 @@ pygments = ">=2.6.0,<3.0.0"
 [package.extras]
 jupyter = ["ipywidgets (>=7.5.1,<8.0.0)"]
 
+[[package]]
+name = "tomli"
+version = "2.0.1"
+description = "A lil' TOML parser"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.11"
-content-hash = "f57a3e3f430a1f153ccf109893cae0f6ecc4e6eafcc0f31ce27a687ffec290ef"
+python-versions = "^3.10"
+content-hash = "296e238c7a6b374c6e6d9274d9f8c1bd4aad54d26dbf2623274ec6674e1e39af"
 
 [metadata.files]
 black = [
@@ -167,15 +168,11 @@ pygments = [
     {file = "Pygments-2.13.0-py3-none-any.whl", hash = "sha256:f643f331ab57ba3c9d89212ee4a2dabc6e94f117cf4eefde99a0574720d14c42"},
     {file = "Pygments-2.13.0.tar.gz", hash = "sha256:56a8508ae95f98e2b9bdf93a6be5ae3f7d8af858b43e02c5a2ff083726be40c1"},
 ]
-pyoxidizer = [
-    {file = "pyoxidizer-0.23.0-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:c5614d113d60013150b0c281a15bd72e53a0a4d76e3f583591a683bfbca585a3"},
-    {file = "pyoxidizer-0.23.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:1ab30cfebbdde6415886a5fc0480c6db9ca6e28520859405b02bf008ca871241"},
-    {file = "pyoxidizer-0.23.0-py3-none-manylinux2010_x86_64.whl", hash = "sha256:0c99ed8826f1c45431a405f1e4ef3897bb75e8b2c9a4b0eeda64733350b96a6b"},
-    {file = "pyoxidizer-0.23.0-py3-none-manylinux2014_aarch64.whl", hash = "sha256:3b8b403ea6033584525f5e6675652e7edd437e172c55a32ebf774ade2f691d01"},
-    {file = "pyoxidizer-0.23.0-py3-none-win32.whl", hash = "sha256:b918943e3789b6ff0bf39e66f2489207b126a34eb8e9351e4e858d5408b6c1f5"},
-    {file = "pyoxidizer-0.23.0-py3-none-win_amd64.whl", hash = "sha256:4d1114ebe39e5be06e545032303ba482aa829c46d97d8f9dea3a15a4e9472891"},
-]
 rich = [
     {file = "rich-12.6.0-py3-none-any.whl", hash = "sha256:a4eb26484f2c82589bd9a17c73d32a010b1e29d89f1604cd9bf3a2097b81bb5e"},
     {file = "rich-12.6.0.tar.gz", hash = "sha256:ba3a3775974105c221d31141f2c116f4fd65c5ceb0698657a11e9f295ec93fd0"},
+]
+tomli = [
+    {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
+    {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
 ]

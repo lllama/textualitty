@@ -1,14 +1,33 @@
 import subprocess
+import shutil
 import os
-import tarfile
+import zipfile
 from pathlib import Path
 from rich import print, console
 import urllib.request
 
 
 import click
+from stat import S_IXUSR, S_IXGRP, S_IXOTH
 
 text_console = console.Console()
+
+WORKDIR = Path(".textualitty")
+
+ZIP_UNIX_SYSTEM = 3
+
+
+def extract_all_with_executable_permission(zf, target_dir):
+    for info in zf.infolist():
+        extracted_path = zf.extract(info, target_dir)
+
+        if info.create_system == ZIP_UNIX_SYSTEM and os.path.isfile(extracted_path):
+            unix_attributes = info.external_attr >> 16
+            if unix_attributes & S_IXUSR:
+                os.chmod(
+                    extracted_path,
+                    os.stat(extracted_path).st_mode | S_IXUSR,
+                )
 
 
 @click.group()
@@ -19,50 +38,83 @@ def textualitty():
 @textualitty.command()
 @click.option("-v", "--verbose", is_flag=True)
 def build(verbose):
-    # with text_console.status("[green]Building our python"):
-    #     subprocess.run("pyoxidizer build".split(), capture_output=verbose)
-    # with text_console.status("[green]Getting latest Python Standalone"):
-    #     urllib.request.urlretrieve(
-    #         "https://github.com/indygreg/python-build-standalone/releases/download/20221106/cpython-3.10.8+20221106-aarch64-apple-darwin-pgo+lto-full.tar.zst",
-    #         "python.tar.zst",
-    #     )
-    # with text_console.status("[green]Extracting"):
-    #     subprocess.run("tar xvf python.tar.zst -C .textualitty".split())
+    with text_console.status("[green]Getting latest Python Standalone"):
+        urllib.request.urlretrieve(
+            "https://github.com/indygreg/python-build-standalone/releases/download/20221106/cpython-3.10.8+20221106-aarch64-apple-darwin-pgo+lto-full.tar.zst",
+            "python.tar.zst",
+        )
+    with text_console.status("[green]Extracting"):
+        subprocess.run(
+            "tar xvf python.tar.zst -C .textualitty".split(), capture_output=not verbose
+        )
 
     with text_console.status("[green]Getting dependencies"):
         requirements = subprocess.run(
             "python -m pip freeze".split(), shell=False, capture_output=True
         )
-        (Path(".textualitty") / "requirements.txt").write_bytes(requirements.stdout)
+        (WORKDIR / "requirements.txt").write_bytes(requirements.stdout)
+        reqs = (WORKDIR / "requirements.txt").read_text()
+        (WORKDIR / "requirements.txt").write_text(
+            "\n".join(line for line in reqs.splitlines() if "textualitty" not in line)
+            + "\ntextual"
+        )
+
     with text_console.status("[green]Installing dependencies"):
         subprocess.run(
-            f"{Path('.textualitty')/'python'/'install'/'bin'/'python3'} -m pip install -r {Path('.textualitty')/'requirements.txt'}".split(),
+            f"{WORKDIR/'python'/'install'/'bin'/'python3'} -m pip install -r {WORKDIR/'requirements.txt'}".split(),
+            capture_output=not verbose,
         )
-        # tar = tarfile.open("python.tar.zst")
-        # tar.extractall(".textualitty")
-    # with text_console.status("[green]Getting WezTerm"):
-    #     urllib.request.urlretrieve(
-    #         "https://github.com/wez/wezterm/releases/download/20220905-102802-7d4b8249/wezterm-20220905-102802-7d4b8249-src.tar.gz",
-    #         "wezterm.tar.gz",
-    #     )
-    # with text_console.status("[green]Extracting"):
-    #     tar = tarfile.open("wezterm.tar.gz")
-    #     tar.extractall(".textualitty")
-    # with text_console.status("[green]Building WezTerm"):
-    #     os.chdir(Path(".textualitty") / "wezterm-20220905-102802-7d4b8249")
-    #     subprocess.run("./get-deps", shell=True, capture_output=verbose)
-    #     subprocess.run("cargo build --release".split(), capture_output=verbose)
+    with text_console.status("[green]Getting WezTerm"):
+        urllib.request.urlretrieve(
+            "https://github.com/lllama/wezterm/releases/download/latest/Textualitty-macos-20221118-105315-20681e7a.zip",
+            "wezterm.zip",
+        )
+    with text_console.status("[green]Extracting"):
+        with zipfile.ZipFile("wezterm.zip") as wez:
+            extract_all_with_executable_permission(wez, WORKDIR)
+    with text_console.status("[green]Assembling app"):
+        if (WORKDIR / "build").exists():
+            (WORKDIR / "build" / ".DS_Store").unlink(missing_ok=True)
+            shutil.rmtree(WORKDIR / "build")
+
+        (WORKDIR / "build").mkdir()
+        shutil.copytree(
+            WORKDIR / "Textualitty-macos-20221118-105315-20681e7a" / "Textualitty.app",
+            WORKDIR / "build" / "Textualitty.app",
+        )
+        for folder in ("bin", "lib", "include", "share"):
+            shutil.copytree(
+                WORKDIR / "python" / "install" / folder,
+                WORKDIR / "build" / "Textualitty.app" / "Contents" / "MacOS" / folder,
+            )
+        shutil.copy(
+            "textual.icns",
+            WORKDIR
+            / "build"
+            / "Textualitty.app"
+            / "Contents"
+            / "Resources"
+            / "terminal.icns",
+        )
+        (
+            WORKDIR
+            / "build"
+            / "Textualitty.app"
+            / "Contents"
+            / "MacOS"
+            / "textualitty.py"
+        ).write_text(
+            """\
+from textual.demo import app
+app.run()
+                """
+        )
 
 
 @textualitty.command()
 @click.argument("project")
 def init(project):
-    subprocess.run(
-        f"pyoxidizer init-config-file {project}".split(), capture_output=True
-    )
-    (Path(".") / project / "pyoxidizer.bzl").rename(Path(".") / "pyoxidizer.bzl")
-    (Path(".") / project).rmdir()
-    click.echo("config file created")
+    print("[yellow]This doesn't do anything")
 
 
 def run():

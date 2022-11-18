@@ -8,11 +8,10 @@ packages = [{include = "textualitty", from = "src"}]
 
 [project.urls]
 home = "https://github.com/lllama/textualitty"
-respo = "https://github.com/lllama/textualitty"
+repo = "https://github.com/lllama/textualitty"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pyoxidizer = "^0.23.0"
 click = "^8.1.3"
 rich = "^12.6.0"
 
