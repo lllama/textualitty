@@ -55,11 +55,6 @@ def build(verbose):
             "python -m pip freeze".split(), shell=False, capture_output=True
         )
         (WORKDIR / "requirements.txt").write_bytes(requirements.stdout)
-        reqs = (WORKDIR / "requirements.txt").read_text()
-        (WORKDIR / "requirements.txt").write_text(
-            "\n".join(line for line in reqs.splitlines() if "textualitty" not in line)
-            + "\ntextual"
-        )
 
     with text_console.status("[green]Installing dependencies"):
         subprocess.run(
@@ -84,7 +79,7 @@ def build(verbose):
             WORKDIR / "Textualitty-macos-20221118-105315-20681e7a" / "Textualitty.app",
             WORKDIR / "build" / "Textualitty.app",
         )
-        for folder in ("bin", "lib", "include", "share"):
+        for folder in ("bin", "lib", "include"):
             shutil.copytree(
                 WORKDIR / "python" / "install" / folder,
                 WORKDIR / "build" / "Textualitty.app" / "Contents" / "MacOS" / folder,
@@ -111,6 +106,7 @@ from textual.demo import app
 app.run()
                 """
         )
+        shutil.move(WORKDIR / "build" / "Textualitty.app", "Textualitty.app")
 
 
 @textualitty.command()
