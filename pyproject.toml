@@ -21,3 +21,6 @@ black = {version = "^22.10.0", allow-prereleases = true}
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[project.scripts]
+textualitty = "textualitty.app:run"
