@@ -38,6 +38,8 @@ def textualitty():
 @textualitty.command()
 @click.option("-v", "--verbose", is_flag=True)
 def build(verbose):
+    WORKDIR.mkdir(exist_ok=True)
+
     with text_console.status("[green]Getting latest Python Standalone"):
         urllib.request.urlretrieve(
             "https://github.com/indygreg/python-build-standalone/releases/download/20221106/cpython-3.10.8+20221106-aarch64-apple-darwin-pgo+lto-full.tar.zst",
