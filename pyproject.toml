@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "textualitty"
-version = "0.1.0.post2"
+version = "0.2.0"
 description = ""
 authors = ["Felix Ingram <f.ingram@gmail.com>"]
 readme = "README.md"
@@ -23,4 +23,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [project.scripts]
+textualitty = "textualitty.app:run"
+
+[tool.poetry.scripts]
 textualitty = "textualitty.app:run"
